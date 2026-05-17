@@ -22,6 +22,39 @@
     --rule-soft: #c4c0b8;
   }
 
+  /* ===== i18n: language-toggle display rules ===== */
+  /* Default state (en): hide all .i18n-zh */
+  html[lang="en"] .i18n-zh { display: none !important; }
+  html[lang="zh"] .i18n-en { display: none !important; }
+  /* Inline variants */
+  html[lang="en"] .i18n-zh-inline { display: none !important; }
+  html[lang="zh"] .i18n-en-inline { display: none !important; }
+
+  /* Latin-in-parens helper for ZH mode institutional names */
+  .latin-parens {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.65em;
+    color: var(--text-muted);
+    font-weight: 300;
+    display: block;
+    margin-top: 4px;
+    font-variation-settings: "SOFT" 100;
+    letter-spacing: 0.005em;
+  }
+  /* Latin sub-line under section titles in ZH mode */
+  .title-main .latin-sub {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 0.32em;
+    color: var(--text-muted);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    margin-top: 18px;
+    line-height: 1.2;
+    font-variation-settings: "SOFT" 100;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { scroll-behavior: smooth; }
@@ -108,6 +141,39 @@
     opacity: 0.75;
   }
   nav.top ul a:hover { opacity: 1; color: var(--accent); }
+
+  /* Language toggle pill */
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 28px;
+    border: 1px solid var(--text);
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    font-weight: 500;
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    padding: 7px 14px;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+    font-weight: inherit;
+    line-height: 1;
+    transition: background 0.2s, color 0.2s;
+  }
+  .lang-btn + .lang-btn { border-left: 1px solid var(--text); }
+  .lang-btn:hover { background: rgba(0, 119, 190, 0.08); }
+  .lang-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+  }
+  .lang-btn.active:hover { background: var(--accent); }
 
   /* ===== LAYOUT ===== */
 
@@ -1392,6 +1458,36 @@
     font-style: normal;
     color: var(--text-soft);
   }
+  /* ZH mode: flip the visual hierarchy — Chinese becomes prominent, English drops to caption */
+  html[lang="zh"] .honor-text strong {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 4px;
+    order: 2;
+    /* hide the English title by default in ZH; we use a separate i18n-zh node */
+    display: none;
+  }
+  html[lang="zh"] .honor-text .cn {
+    font-size: 19px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  html[lang="zh"] .honor-text .honor-en-cap {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 8px;
+    font-variation-settings: "SOFT" 100;
+  }
+  html[lang="en"] .honor-text .honor-en-cap { display: none; }
   .honor-arrow {
     font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
@@ -1791,14 +1887,20 @@
 
 <nav class="top">
   <a href="#" class="brand"><span class="cn">耶力达尔</span><em>Edward</em></a>
-  <ul>
-    <li><a href="#about">About</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#research">Research</a></li>
-    <li><a href="#work">Work</a></li>
-    <li><a href="#honors">Honors</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+  <div style="display:flex; align-items:center;">
+    <ul>
+      <li><a href="#about"><span class="i18n-en">About</span><span class="i18n-zh">关于</span></a></li>
+      <li><a href="#education"><span class="i18n-en">Education</span><span class="i18n-zh">教育</span></a></li>
+      <li><a href="#research"><span class="i18n-en">Research</span><span class="i18n-zh">研究</span></a></li>
+      <li><a href="#work"><span class="i18n-en">Work</span><span class="i18n-zh">作品</span></a></li>
+      <li><a href="#honors"><span class="i18n-en">Honors</span><span class="i18n-zh">荣誉</span></a></li>
+      <li><a href="#contact"><span class="i18n-en">Contact</span><span class="i18n-zh">联系</span></a></li>
+    </ul>
+    <div class="lang-switch" role="group" aria-label="Language switcher">
+      <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="中文">中文</button>
+    </div>
+  </div>
 </nav>
 
 <!-- ============ HERO ============ -->
@@ -1806,7 +1908,8 @@
   <div class="hero-left">
     <div class="hero-meta reveal visible">
       <span class="dot"></span>
-      <span>Portfolio &amp; CV · 2026 · Fudan / HKU</span>
+      <span class="i18n-en">Portfolio &amp; CV · 2026 · Fudan / HKU</span>
+      <span class="i18n-zh">个人作品集与简历 · 2026 · 复旦 / 港大</span>
     </div>
 
     <h1 class="hero-name reveal visible d1">
@@ -1821,7 +1924,8 @@
     <div class="hero-rule reveal visible d3"></div>
 
     <p class="hero-tagline reveal visible d3">
-      A final-year <strong>sociology student at Fudan</strong> with a parallel practice in <strong>writing and short-form video</strong> for the university's public-facing channels.
+      <span class="i18n-en">A final-year <strong>sociology student at Fudan</strong> with a parallel practice in <strong>writing and short-form video</strong> for the university's public-facing channels.</span>
+      <span class="i18n-zh"><strong>复旦大学社会学专业大四在读</strong>，同时长期为校方对外发布渠道从事<strong>写作与短视频创作</strong>。</span>
     </p>
 
     <div class="hero-stats reveal visible d4">
@@ -1835,7 +1939,7 @@
       </div>
       <div>
         <div class="stat-num">3.82</div>
-        <div class="stat-label">Major GPA</div>
+        <div class="stat-label"><span class="i18n-en">Major GPA</span><span class="i18n-zh">专业 GPA</span></div>
       </div>
     </div>
   </div>
@@ -1852,7 +1956,7 @@
   </div>
 
   <div class="scroll-indicator">
-    <span>Scroll</span>
+    <span class="i18n-en">Scroll</span><span class="i18n-zh">下滑</span>
     <span class="arrow"></span>
   </div>
 </header>
@@ -1862,35 +1966,57 @@
   <div class="section-mark reveal">
     <span class="num">①</span>
     <span class="rule"></span>
-    <span class="label">About</span>
+    <span class="label"><span class="i18n-en">About</span><span class="i18n-zh">关于</span></span>
   </div>
   <div class="section-title">
     <h2 class="title-main reveal">
-      <span class="cn">关于</span>
-      <em>About</em> the Author
+      <span class="i18n-en">
+        <span class="cn">关于</span>
+        <em>About</em> the Author
+      </span>
+      <span class="i18n-zh">
+        <em>关于</em>作者
+        <span class="latin-sub">About the Author</span>
+      </span>
     </h2>
     <div class="title-aside reveal d1">
-      A brief introduction to the work that follows — and the threads that hold it together.
+      <span class="i18n-en">A brief introduction to the work that follows — and the threads that hold it together.</span>
+      <span class="i18n-zh">对接下来内容的简短引言，以及串联起这些内容的几条主线。</span>
     </div>
   </div>
 
   <div class="about-body">
     <div class="about-lede reveal">
-      <p>I am a final-year undergraduate at <strong>Fudan University's School of Social Development and Public Policy</strong>. My years at Fudan have been shaped by three threads I keep returning to: sociology coursework grounded in theory and method, hands-on research and fieldwork, and a parallel practice of writing and filmmaking for the university's public-facing channels.</p>
+      <div class="i18n-en">
+        <p>I am a final-year undergraduate at <strong>Fudan University's School of Social Development and Public Policy</strong>. My years at Fudan have been shaped by three threads I keep returning to: sociology coursework grounded in theory and method, hands-on research and fieldwork, and a parallel practice of writing and filmmaking for the university's public-facing channels.</p>
 
-      <p>I have served as <strong>independent researcher</strong> on a Xiyuan-funded study of non-teaching burdens carried by K–12 teachers in China, worked as a <strong>research assistant</strong> at the <strong>Fudan Development Institute</strong> on a comparative education project between Brazil and China, and contributed to the <strong>Center for American Studies</strong>' work on the U.S. Innovation Index. Alongside this, I produce video and editorial features for Fudan's official international accounts. I have placed in bilingual speech and intercultural-competence contests at the university level, and represented Fudan in a national short-film competition.</p>
+        <p>I have served as <strong>independent researcher</strong> on a Xiyuan-funded study of non-teaching burdens carried by K–12 teachers in China, worked as a <strong>research assistant</strong> at the <strong>Fudan Development Institute</strong> on a comparative education project between Brazil and China, and contributed to the <strong>Center for American Studies</strong>' work on the U.S. Innovation Index. Alongside this, I produce video and editorial features for Fudan's official international accounts. I have placed in bilingual speech and intercultural-competence contests at the university level, and represented Fudan in a national short-film competition.</p>
 
-      <p>I tend to take on several things at once and see them through to the end. I work well under pressure, and the constant across my work — whether research, writing, or video — is the drive to do the task properly.</p>
+        <p>I tend to take on several things at once and see them through to the end. I work well under pressure, and the constant across my work — whether research, writing, or video — is the drive to do the task properly.</p>
+      </div>
+      <div class="i18n-zh">
+        <p>我是<strong>复旦大学社会发展与公共政策学院（School of Social Development and Public Policy）</strong>的大四本科生。在复旦的几年里，有三件事是我反复回到的：扎实的社会学理论与方法训练、田野调查与一手研究，以及为校方对外发布渠道进行的写作与影像创作。</p>
+
+        <p>我曾以<strong>独立研究者（Independent Researcher）</strong>身份主持复旦曦源项目，研究中国中小学教师的非教学负担问题；在<strong>复旦发展研究院（Fudan Development Institute）</strong>担任<strong>研究助理（Research Assistant）</strong>，参与中国与巴西的比较教育项目；并为<strong>复旦大学美国研究中心（Center for American Studies）</strong>的「美国创新指数（USII）」项目贡献数据整理与报告撰写。除此之外，我长期为复旦官方国际传播账号制作视频、撰写英文专栏。我曾在复旦校内的双语演讲、跨文化能力等多项赛事中获得一等奖，并代表复旦参加全国大学生英语短视频比赛，获国赛银奖。</p>
+
+        <p>我习惯同时推进多项任务，并把每一件事做到收尾。我在高压环境下能保持稳定的产出节奏；无论是做研究、写作还是拍视频，「把事情认真做好」是我工作中始终不变的一根线。</p>
+      </div>
     </div>
 
     <aside class="about-aside reveal d2">
       <dl>
-        <dt>Born</dt><dd>2002 · Age 23</dd>
-        <dt>Based</dt><dd>Shanghai, China</dd>
-        <dt>Reading</dt><dd>B.A. Sociology, Fudan</dd>
-        <dt>Languages</dt><dd>中文 · English · Kyrgyz</dd>
-        <dt>Tools</dt><dd>CapCut · Final Cut · DaVinci · Stata · R · Figma</dd>
-        <dt>Bylines</dt><dd>Fudan University (IG / 小红书 / YouTube)</dd>
+        <dt><span class="i18n-en">Born</span><span class="i18n-zh">出生</span></dt>
+        <dd><span class="i18n-en">2002 · Age 23</span><span class="i18n-zh">2002 年 · 23 岁</span></dd>
+        <dt><span class="i18n-en">Based</span><span class="i18n-zh">现居</span></dt>
+        <dd><span class="i18n-en">Shanghai, China</span><span class="i18n-zh">中国上海</span></dd>
+        <dt><span class="i18n-en">Reading</span><span class="i18n-zh">在读</span></dt>
+        <dd><span class="i18n-en">B.A. Sociology, Fudan</span><span class="i18n-zh">复旦大学社会学学士</span></dd>
+        <dt><span class="i18n-en">Languages</span><span class="i18n-zh">语言</span></dt>
+        <dd><span class="i18n-en">中文 · English · Kyrgyz</span><span class="i18n-zh">中文 · 英语 · 柯尔克孜语</span></dd>
+        <dt><span class="i18n-en">Tools</span><span class="i18n-zh">工具</span></dt>
+        <dd>CapCut · Final Cut · DaVinci · Stata · R · Figma</dd>
+        <dt><span class="i18n-en">Bylines</span><span class="i18n-zh">署名平台</span></dt>
+        <dd><span class="i18n-en">Fudan University (IG / 小红书 / YouTube)</span><span class="i18n-zh">复旦大学官方账号 (Instagram / 小红书 / YouTube)</span></dd>
       </dl>
     </aside>
   </div>
@@ -1901,15 +2027,22 @@
   <div class="section-mark reveal">
     <span class="num">②</span>
     <span class="rule"></span>
-    <span class="label">Education</span>
+    <span class="label"><span class="i18n-en">Education</span><span class="i18n-zh">教育</span></span>
   </div>
   <div class="section-title">
     <h2 class="title-main reveal">
-      <span class="cn">教育</span>
-      <em>Education</em>
+      <span class="i18n-en">
+        <span class="cn">教育</span>
+        <em>Education</em>
+      </span>
+      <span class="i18n-zh">
+        <em>教育</em>背景
+        <span class="latin-sub">Education</span>
+      </span>
     </h2>
     <div class="title-aside reveal d1">
-      2022 — present · Shanghai · Hong Kong
+      <span class="i18n-en">2022 — present · Shanghai · Hong Kong</span>
+      <span class="i18n-zh">2022 — 至今 · 上海 · 香港</span>
     </div>
   </div>
 
@@ -1918,33 +2051,48 @@
       <div class="edu-date">2022.09 — 2026.06</div>
       <div>
         <div class="edu-school">
-          <span class="cn">复旦大学</span>
-          Fudan University
+          <span class="i18n-en">
+            <span class="cn">复旦大学</span>
+            Fudan University
+          </span>
+          <span class="i18n-zh">
+            复旦大学
+            <span class="latin-parens">(Fudan University)</span>
+          </span>
         </div>
-        <div class="edu-program">B.A. Sociology · School of Social Development &amp; Public Policy</div>
-        <div class="honors-track">Honorary Degree Track</div>
-        <p class="honors-footnote">An additional distinction earned alongside normal completion of the bachelor's degree — awarded to students meeting standards in <em>cumulative GPA, graduation-thesis grade, and an independent research project</em>.</p>
+        <div class="edu-program">
+          <span class="i18n-en">B.A. Sociology · School of Social Development &amp; Public Policy</span>
+          <span class="i18n-zh">社会学学士 · 社会发展与公共政策学院</span>
+        </div>
+        <div class="honors-track">
+          <span class="i18n-en">Honorary Degree Track</span><span class="i18n-zh">荣誉学位轨道</span>
+        </div>
+        <p class="honors-footnote">
+          <span class="i18n-en">An additional distinction earned alongside normal completion of the bachelor's degree — awarded to students meeting standards in <em>cumulative GPA, graduation-thesis grade, and an independent research project</em>.</span>
+          <span class="i18n-zh">在完成本科学位的基础上额外授予的荣誉认证 —— 颁发标准包括<em>累计 GPA、毕业论文成绩与一项独立研究项目</em>三项要求。</span>
+        </p>
         <p class="edu-detail">
-          Honours coursework across <strong>organizational sociology, classical social theory, social statistics, internet &amp; society, social stratification</strong>, and an advanced research seminar.
+          <span class="i18n-en">Honours coursework across <strong>organizational sociology, classical social theory, social statistics, internet &amp; society, social stratification</strong>, and an advanced research seminar.</span>
+          <span class="i18n-zh">荣誉课程涵盖<strong>组织社会学、古典社会学理论、社会统计、互联网与社会、社会分层</strong>，以及一门高级研究研讨课。</span>
         </p>
         <div class="edu-gpa-strip">
-          <div><span class="num">3.82</span><span class="lbl">Major GPA</span></div>
-          <div><span class="num">3.63</span><span class="lbl">Cumulative</span></div>
-          <div><span class="num">A / A+</span><span class="lbl">Advanced English Track</span></div>
+          <div><span class="num">3.82</span><span class="lbl"><span class="i18n-en">Major GPA</span><span class="i18n-zh">专业 GPA</span></span></div>
+          <div><span class="num">3.63</span><span class="lbl"><span class="i18n-en">Cumulative</span><span class="i18n-zh">总绩点</span></span></div>
+          <div><span class="num">A / A+</span><span class="lbl"><span class="i18n-en">Advanced English Track</span><span class="i18n-zh">英语高阶班</span></span></div>
         </div>
       </div>
       <ul class="edu-courses">
-        <span class="courses-label">Sociology Core</span>
-        <li>Organizational Sociology</li>
-        <li>Classical Social Theory</li>
-        <li>Social Statistics</li>
-        <li>Internet &amp; Society</li>
-        <li>Social Stratification</li>
-        <span class="courses-label" style="margin-top:14px;">Advanced English (Top Track)</span>
-        <li>Research Paper Writing</li>
-        <li>International Conferences &amp; Seminars</li>
-        <li>Academic English Viewing / Listening / Speaking</li>
-        <li>Critical Thinking in English Argumentation</li>
+        <span class="courses-label"><span class="i18n-en">Sociology Core</span><span class="i18n-zh">社会学核心课</span></span>
+        <li><span class="i18n-en">Organizational Sociology</span><span class="i18n-zh">组织社会学</span></li>
+        <li><span class="i18n-en">Classical Social Theory</span><span class="i18n-zh">古典社会学理论</span></li>
+        <li><span class="i18n-en">Social Statistics</span><span class="i18n-zh">社会统计</span></li>
+        <li><span class="i18n-en">Internet &amp; Society</span><span class="i18n-zh">互联网与社会</span></li>
+        <li><span class="i18n-en">Social Stratification</span><span class="i18n-zh">社会分层</span></li>
+        <span class="courses-label" style="margin-top:14px;"><span class="i18n-en">Advanced English (Top Track)</span><span class="i18n-zh">英语高阶（A 级）</span></span>
+        <li><span class="i18n-en">Research Paper Writing</span><span class="i18n-zh">学术论文写作</span></li>
+        <li><span class="i18n-en">International Conferences &amp; Seminars</span><span class="i18n-zh">国际会议与研讨</span></li>
+        <li><span class="i18n-en">Academic English Viewing / Listening / Speaking</span><span class="i18n-zh">学术英语视听说</span></li>
+        <li><span class="i18n-en">Critical Thinking in English Argumentation</span><span class="i18n-zh">英语论辩中的批判性思维</span></li>
       </ul>
     </div>
 
@@ -1952,22 +2100,34 @@
       <div class="edu-date">2024.01 — 2024.06</div>
       <div>
         <div class="edu-school">
-          <span class="cn">香港大学</span>
-          The University of Hong Kong
+          <span class="i18n-en">
+            <span class="cn">香港大学</span>
+            The University of Hong Kong
+          </span>
+          <span class="i18n-zh">
+            香港大学
+            <span class="latin-parens">(The University of Hong Kong)</span>
+          </span>
         </div>
-        <div class="edu-program">Faculty of Social Sciences · Semester Exchange</div>
-        <a href="https://www.fungfoundation.org/" target="_blank" rel="noopener" class="scholarship-tag">Fung Scholarship ↗</a>
+        <div class="edu-program">
+          <span class="i18n-en">Faculty of Social Sciences · Semester Exchange</span>
+          <span class="i18n-zh">社会科学学院 · 学期交换生</span>
+        </div>
+        <a href="https://www.fungfoundation.org/" target="_blank" rel="noopener" class="scholarship-tag">
+          <span class="i18n-en">Fung Scholarship ↗</span><span class="i18n-zh">冯氏奖学金 ↗</span>
+        </a>
         <p class="edu-detail" style="margin-top:18px;">
-          A semester abroad in Hong Kong, taken in spring of my second year, supported by the <strong>Fung Scholarship</strong>. Coursework in <strong>modern social theory, education and society, quantitative social science</strong>, and <strong>population &amp; social development</strong>, alongside an introduction to <strong>social psychology</strong>.
+          <span class="i18n-en">A semester abroad in Hong Kong, taken in spring of my second year, supported by the <strong>Fung Scholarship</strong>. Coursework in <strong>modern social theory, education and society, quantitative social science</strong>, and <strong>population &amp; social development</strong>, alongside an introduction to <strong>social psychology</strong>.</span>
+          <span class="i18n-zh">大二春季学期赴港大交换，获<strong>冯氏奖学金（Fung Scholarship）</strong>资助。修读<strong>现代社会理论、教育与社会、定量社会科学、人口与社会发展</strong>等课程，并选修<strong>社会心理学导论</strong>。</span>
         </p>
       </div>
       <ul class="edu-courses">
-        <span class="courses-label">HKU Coursework</span>
-        <li>Modern Social Theory</li>
-        <li>Education &amp; Society</li>
-        <li>Quantitative Social Science</li>
-        <li>Population &amp; Social Development</li>
-        <li>Social Psychology (Intro)</li>
+        <span class="courses-label"><span class="i18n-en">HKU Coursework</span><span class="i18n-zh">港大修读课程</span></span>
+        <li><span class="i18n-en">Modern Social Theory</span><span class="i18n-zh">现代社会理论</span></li>
+        <li><span class="i18n-en">Education &amp; Society</span><span class="i18n-zh">教育与社会</span></li>
+        <li><span class="i18n-en">Quantitative Social Science</span><span class="i18n-zh">定量社会科学</span></li>
+        <li><span class="i18n-en">Population &amp; Social Development</span><span class="i18n-zh">人口与社会发展</span></li>
+        <li><span class="i18n-en">Social Psychology (Intro)</span><span class="i18n-zh">社会心理学导论</span></li>
       </ul>
     </div>
   </div>
@@ -1978,15 +2138,22 @@
   <div class="section-mark reveal">
     <span class="num">③</span>
     <span class="rule"></span>
-    <span class="label">Research</span>
+    <span class="label"><span class="i18n-en">Research</span><span class="i18n-zh">研究</span></span>
   </div>
   <div class="section-title">
     <h2 class="title-main reveal">
-      <span class="cn">研究</span>
-      <em>Academic</em> Work
+      <span class="i18n-en">
+        <span class="cn">研究</span>
+        <em>Academic</em> Work
+      </span>
+      <span class="i18n-zh">
+        <em>学术</em>研究
+        <span class="latin-sub">Academic Work</span>
+      </span>
     </h2>
     <div class="title-aside reveal d1">
-      Independent projects &amp; research assistantships in education and area studies.
+      <span class="i18n-en">Independent projects &amp; research assistantships in education and area studies.</span>
+      <span class="i18n-zh">教育与区域研究方向的独立项目与研究助理工作。</span>
     </div>
   </div>
 
@@ -1998,17 +2165,36 @@
       </div>
       <div>
         <h3 class="acad-org">
-          <span class="cn">复旦大学曦源项目</span>
-          Xiyuan Programme
+          <span class="i18n-en">
+            <span class="cn">复旦大学曦源项目</span>
+            Xiyuan Programme
+          </span>
+          <span class="i18n-zh">
+            复旦大学曦源项目
+            <span class="latin-parens">(Xiyuan Programme)</span>
+          </span>
         </h3>
-        <div class="acad-role">Independent Researcher · Independent Grant</div>
+        <div class="acad-role">
+          <span class="i18n-en">Independent Researcher · Independent Grant</span>
+          <span class="i18n-zh">独立研究者 · 独立项目立项</span>
+        </div>
         <div class="acad-desc">
-          <p>Sole applicant and project lead on <em>"Non-teaching Burdens on K–12 Teachers: Antecedents and Consequences"</em> — a year-long fieldwork-based study under the guidance of <strong>Dr. Li Xue</strong>.</p>
-          <p>Xiyuan is the senior tier of <strong>FDUROP</strong> — <em>Fudan's Undergraduate Research Opportunities Program</em>, Fudan's flagship scheme for independent undergraduate research. Project serial <a class="xiyuan-serial" data-cert="xiyuan">曦源 S25054</a>, passed final thesis defence.</p>
+          <div class="i18n-en">
+            <p>Sole applicant and project lead on <em>"Non-teaching Burdens on K–12 Teachers: Antecedents and Consequences"</em> — a year-long fieldwork-based study under the guidance of <strong>Dr. Li Xue</strong>.</p>
+            <p>Xiyuan is the senior tier of <strong>FDUROP</strong> — <em>Fudan's Undergraduate Research Opportunities Program</em>, Fudan's flagship scheme for independent undergraduate research. Project serial <a class="xiyuan-serial" data-cert="xiyuan">曦源 S25054</a>, passed final thesis defence.</p>
+          </div>
+          <div class="i18n-zh">
+            <p>独立申报并主持项目<em>《中小学教师的非教学负担：成因与后果》</em>，在<strong>李雪老师</strong>指导下完成为期一年的田野研究。</p>
+            <p>曦源项目是<strong>FDUROP（Fudan's Undergraduate Research Opportunities Program）</strong>体系下的高阶项目类别，是复旦大学面向本科生的旗舰独立研究资助计划。项目编号 <a class="xiyuan-serial" data-cert="xiyuan">曦源 S25054</a>，已通过结项答辩。</p>
+          </div>
         </div>
         <div class="acad-actions">
-          <a class="acad-pill accent" href="https://mp.weixin.qq.com/s/K_uW9e_92Tu1PeVAJR3PaA" target="_blank" rel="noopener">Project Feature ↗</a>
-          <a class="acad-pill" data-cert="xiyuan">View Certificate</a>
+          <a class="acad-pill accent" href="https://mp.weixin.qq.com/s/K_uW9e_92Tu1PeVAJR3PaA" target="_blank" rel="noopener">
+            <span class="i18n-en">Project Feature ↗</span><span class="i18n-zh">项目专访 ↗</span>
+          </a>
+          <a class="acad-pill" data-cert="xiyuan">
+            <span class="i18n-en">View Certificate</span><span class="i18n-zh">查看证书</span>
+          </a>
         </div>
       </div>
     </article>
@@ -2020,17 +2206,32 @@
       </div>
       <div>
         <h3 class="acad-org">
-          <span class="cn">复旦大学发展研究院</span>
-          <a href="https://fddi.fudan.edu.cn/main.htm" target="_blank" rel="noopener">Fudan Development Institute</a>
+          <span class="i18n-en">
+            <span class="cn">复旦大学发展研究院</span>
+            <a href="https://fddi.fudan.edu.cn/main.htm" target="_blank" rel="noopener">Fudan Development Institute</a>
+          </span>
+          <span class="i18n-zh">
+            <a href="https://fddi.fudan.edu.cn/main.htm" target="_blank" rel="noopener">复旦大学发展研究院</a>
+            <span class="latin-parens">(Fudan Development Institute)</span>
+          </span>
         </h3>
-        <div class="acad-role">Research Assistant</div>
+        <div class="acad-role"><span class="i18n-en">Research Assistant</span><span class="i18n-zh">研究助理</span></div>
         <div class="acad-desc">
-          <p>Research assistant to <a href="https://fddi.fudan.edu.cn/f8/c4/c18948a260292/page.htm" target="_blank" rel="noopener">Dr. LIU Hong</a> on the <em>Fudan–UC Berkeley comparative project</em>, contributing to a forthcoming book chapter.</p>
-          <p>Worked alongside Dr. Liu and <a href="https://flauc.fudan.edu.cn/_t1958/0b/83/c18733a723843/page.htm" target="_blank" rel="noopener">Prof. Adriana Lia Friszman</a> (Brazil) on a <em>China–Brazil policy comparison on inclusive education</em>, authoring the report chapter on <em>Fundamental Education in China</em>.</p>
-          <p>Co-produced an interview report with <strong>Prof. José Roselino</strong>, jointly published by FDDI and Fudan Media Center.</p>
+          <div class="i18n-en">
+            <p>Research assistant to <a href="https://fddi.fudan.edu.cn/f8/c4/c18948a260292/page.htm" target="_blank" rel="noopener">Dr. LIU Hong</a> on the <em>Fudan–UC Berkeley comparative project</em>, contributing to a forthcoming book chapter.</p>
+            <p>Worked alongside Dr. Liu and <a href="https://flauc.fudan.edu.cn/_t1958/0b/83/c18733a723843/page.htm" target="_blank" rel="noopener">Prof. Adriana Lia Friszman</a> (Brazil) on a <em>China–Brazil policy comparison on inclusive education</em>, authoring the report chapter on <em>Fundamental Education in China</em>.</p>
+            <p>Co-produced an interview report with <strong>Prof. José Roselino</strong>, jointly published by FDDI and Fudan Media Center.</p>
+          </div>
+          <div class="i18n-zh">
+            <p>担任<a href="https://fddi.fudan.edu.cn/f8/c4/c18948a260292/page.htm" target="_blank" rel="noopener">刘虹老师（Dr. LIU Hong）</a>的研究助理，参与<em>复旦—加州大学伯克利分校比较研究项目</em>，为即将出版的书稿贡献章节。</p>
+            <p>与刘老师及<a href="https://flauc.fudan.edu.cn/_t1958/0b/83/c18733a723843/page.htm" target="_blank" rel="noopener">Adriana Lia Friszman 教授</a>（巴西方）共同推进<em>中—巴包容性教育政策比较研究</em>，撰写报告中《中国基础教育》章节。</p>
+            <p>与 José Roselino 教授合作完成一篇人物专访，由复旦发展研究院与复旦融媒体中心联合刊出。</p>
+          </div>
         </div>
         <div class="acad-actions">
-          <a class="acad-pill accent" href="https://mp.weixin.qq.com/s/7F6zEB1sfFfjhjAvXTzUKg" target="_blank" rel="noopener">Roselino Interview ↗</a>
+          <a class="acad-pill accent" href="https://mp.weixin.qq.com/s/7F6zEB1sfFfjhjAvXTzUKg" target="_blank" rel="noopener">
+            <span class="i18n-en">Roselino Interview ↗</span><span class="i18n-zh">Roselino 专访 ↗</span>
+          </a>
         </div>
       </div>
     </article>
@@ -2042,16 +2243,31 @@
       </div>
       <div>
         <h3 class="acad-org">
-          <span class="cn">复旦大学美国研究中心</span>
-          Center for American Studies
+          <span class="i18n-en">
+            <span class="cn">复旦大学美国研究中心</span>
+            Center for American Studies
+          </span>
+          <span class="i18n-zh">
+            复旦大学美国研究中心
+            <span class="latin-parens">(Center for American Studies)</span>
+          </span>
         </h3>
-        <div class="acad-role">Research Assistant</div>
+        <div class="acad-role"><span class="i18n-en">Research Assistant</span><span class="i18n-zh">研究助理</span></div>
         <div class="acad-desc">
-          <p>Contributed to the <em>U.S. Innovation Index (USII)</em> project — collecting and structuring underlying data, drafting analytical sections of the accompanying report, and producing related editorial writing for the Center's channels.</p>
+          <div class="i18n-en">
+            <p>Contributed to the <em>U.S. Innovation Index (USII)</em> project — collecting and structuring underlying data, drafting analytical sections of the accompanying report, and producing related editorial writing for the Center's channels.</p>
+          </div>
+          <div class="i18n-zh">
+            <p>参与<em>美国创新指数（U.S. Innovation Index, USII）</em>项目 —— 负责底层数据采集与结构化整理、报告分析章节的初稿撰写，并为中心官方平台撰写相关专栏。</p>
+          </div>
         </div>
         <div class="acad-actions">
-          <a class="acad-pill accent" href="https://mp.weixin.qq.com/s/VPS2M-DAUB-Wa-9ozIBgyg" target="_blank" rel="noopener">Editorial I ↗</a>
-          <a class="acad-pill accent" href="https://mp.weixin.qq.com/s/BLPobLyxU7BZwBMu1sXZCQ?scene=1" target="_blank" rel="noopener">Editorial II ↗</a>
+          <a class="acad-pill accent" href="https://mp.weixin.qq.com/s/VPS2M-DAUB-Wa-9ozIBgyg" target="_blank" rel="noopener">
+            <span class="i18n-en">Editorial I ↗</span><span class="i18n-zh">专栏 I ↗</span>
+          </a>
+          <a class="acad-pill accent" href="https://mp.weixin.qq.com/s/BLPobLyxU7BZwBMu1sXZCQ?scene=1" target="_blank" rel="noopener">
+            <span class="i18n-en">Editorial II ↗</span><span class="i18n-zh">专栏 II ↗</span>
+          </a>
         </div>
       </div>
     </article>
@@ -2063,15 +2279,22 @@
   <div class="section-mark reveal">
     <span class="num">④</span>
     <span class="rule"></span>
-    <span class="label">Selected Work</span>
+    <span class="label"><span class="i18n-en">Selected Work</span><span class="i18n-zh">作品</span></span>
   </div>
   <div class="section-title">
     <h2 class="title-main reveal">
-      <span class="cn">作品</span>
-      <em>Selected</em> Work
+      <span class="i18n-en">
+        <span class="cn">作品</span>
+        <em>Selected</em> Work
+      </span>
+      <span class="i18n-zh">
+        <em>精选</em>作品
+        <span class="latin-sub">Selected Work</span>
+      </span>
     </h2>
     <div class="title-aside reveal d1">
-      Media production, editorial features &amp; interview content for university channels.
+      <span class="i18n-en">Media production, editorial features &amp; interview content for university channels.</span>
+      <span class="i18n-zh">为校园媒体平台制作的视频内容、深度专栏与人物专访。</span>
     </div>
   </div>
 
@@ -2081,17 +2304,17 @@
       <a href="https://mp.weixin.qq.com/s/E84CYzxoyn0OptG_q_kn8w" target="_blank" rel="noopener" class="banner-img banner-1">
         <img src="assets/work-1.jpg" alt="Studio production setup" />
         <span class="index">i</span>
-        <span class="caption">FDMC Recruitment ↗</span>
+        <span class="caption"><span class="i18n-en">FDMC Recruitment ↗</span><span class="i18n-zh">融媒体中心招新 ↗</span></span>
       </a>
       <div class="banner-img banner-2">
         <img src="assets/work-2.jpg" alt="On-campus filming" />
         <span class="index">ii</span>
-        <span class="caption">On-Site · Fudan Campus</span>
+        <span class="caption"><span class="i18n-en">On-Site · Fudan Campus</span><span class="i18n-zh">现场拍摄 · 复旦校园</span></span>
       </div>
       <a href="https://mp.weixin.qq.com/s/VakZVhgxCw_VUlair_0mcA" target="_blank" rel="noopener" class="banner-img banner-3">
         <img src="assets/work-3.jpg" alt="Training session" />
         <span class="index">iii</span>
-        <span class="caption">Training · Workshop ↗</span>
+        <span class="caption"><span class="i18n-en">Training · Workshop ↗</span><span class="i18n-zh">培训 · 工作坊 ↗</span></span>
       </a>
     </div>
 
@@ -2099,34 +2322,38 @@
       <div class="work-meta-block">
         <div class="work-date">2025.03 — 2026.03</div>
         <div class="work-org">复旦大学融媒体中心</div>
-        <div class="work-dept">Fudan Convergence Media Center<br>EN &amp; CN Desks</div>
-        <div class="work-role">Video Producer · Planner</div>
+        <div class="work-dept">
+          <span class="i18n-en">Fudan Convergence Media Center<br>EN &amp; CN Desks</span>
+          <span class="i18n-zh">复旦大学融媒体中心<br>中文 / 英文双语组</span>
+        </div>
+        <div class="work-role"><span class="i18n-en">Video Producer · Planner</span><span class="i18n-zh">视频制作 · 策划</span></div>
       </div>
       <div class="work-desc">
-        Independently planned, shot, and edited promotional videos and English editorial articles across the year — on-site interview features and bilingual coverage, bylined as <strong>Edward Eldar Turdmat</strong> on the official <strong>Fudan University</strong> account. Work distributed across <em>Instagram</em>, <em>小红书</em>, and <em>YouTube</em>.
+        <span class="i18n-en">Independently planned, shot, and edited promotional videos and English editorial articles across the year — on-site interview features and bilingual coverage, bylined as <strong>Edward Eldar Turdmat</strong> on the official <strong>Fudan University</strong> account. Work distributed across <em>Instagram</em>, <em>小红书</em>, and <em>YouTube</em>.</span>
+        <span class="i18n-zh">独立策划、拍摄、剪辑全年宣传视频与英文专栏文章 —— 涵盖人物专访与双语校园报道，以 <strong>Edward Eldar Turdmat</strong> 之名署于<strong>复旦大学</strong>官方账号。作品分发于 <em>Instagram</em>、<em>小红书</em>、<em>YouTube</em> 等平台。</span>
       </div>
     </div>
 
     <div class="work-metrics reveal">
       <div class="work-metric">
         <div class="metric-num">15+</div>
-        <div class="metric-label">Promotional Videos</div>
-        <div class="metric-detail">independently planned, shot &amp; edited</div>
+        <div class="metric-label"><span class="i18n-en">Promotional Videos</span><span class="i18n-zh">宣传视频</span></div>
+        <div class="metric-detail"><span class="i18n-en">independently planned, shot &amp; edited</span><span class="i18n-zh">独立策划、拍摄、剪辑</span></div>
       </div>
       <div class="work-metric">
         <div class="metric-num">10+</div>
-        <div class="metric-label">English Articles</div>
-        <div class="metric-detail">bylined editorial features</div>
+        <div class="metric-label"><span class="i18n-en">English Articles</span><span class="i18n-zh">英文专栏</span></div>
+        <div class="metric-detail"><span class="i18n-en">bylined editorial features</span><span class="i18n-zh">署名深度报道</span></div>
       </div>
       <div class="work-metric">
         <div class="metric-num">100k+</div>
-        <div class="metric-label">Total Views</div>
-        <div class="metric-detail">across Fudan's social channels</div>
+        <div class="metric-label"><span class="i18n-en">Total Views</span><span class="i18n-zh">累计阅读</span></div>
+        <div class="metric-detail"><span class="i18n-en">across Fudan's social channels</span><span class="i18n-zh">复旦各社交平台合计</span></div>
       </div>
     </div>
 
     <div class="embeds-label">
-      <span>Published Reels</span>
+      <span><span class="i18n-en">Published Reels</span><span class="i18n-zh">已发布短视频</span></span>
       <span class="platform">Instagram · @fudan_university</span>
     </div>
     <div class="embed-grid">
@@ -2135,7 +2362,8 @@
         <div class="reel-meta">Reel · 01</div>
         <div class="reel-play"></div>
         <div class="reel-caption">
-          My China Moment — an international student's view of Shanghai.
+          <span class="i18n-en">My China Moment — an international student's view of Shanghai.</span>
+          <span class="i18n-zh">My China Moment —— 一位国际生眼中的上海。</span>
           <span class="handle">@fudan_university</span>
         </div>
       </a>
@@ -2144,7 +2372,8 @@
         <div class="reel-meta">Reel · 02</div>
         <div class="reel-play"></div>
         <div class="reel-caption">
-          What is it like to study at Fudan? @ SSDPP
+          <span class="i18n-en">What is it like to study at Fudan? @ SSDPP</span>
+          <span class="i18n-zh">在复旦 SSDPP 就读是怎样的体验？</span>
           <span class="handle">@fudan_university</span>
         </div>
       </a>
@@ -2153,7 +2382,8 @@
         <div class="reel-meta">Reel · 03</div>
         <div class="reel-play"></div>
         <div class="reel-caption">
-          Teachers' Day · Every lesson shapes every moment ahead.
+          <span class="i18n-en">Teachers' Day · Every lesson shapes every moment ahead.</span>
+          <span class="i18n-zh">教师节 · 每一堂课，都塑造着此后的每一刻。</span>
           <span class="handle">@fudan_university</span>
         </div>
       </a>
@@ -2166,24 +2396,31 @@
       <div class="work-meta-block">
         <div class="work-date">2025.07 &nbsp;·&nbsp; 2025.12 — 2026.01</div>
         <div class="work-org">复旦大学国际暑校 / 寒校</div>
-        <div class="work-dept">Fudan International Summer / Winter Session</div>
-        <div class="work-role">Media Assistant · Program Buddy</div>
+        <div class="work-dept">
+          <span class="i18n-en">Fudan International Summer / Winter Session</span>
+          <span class="i18n-zh">复旦大学国际暑校 / 寒校 (FISS / FIWS)</span>
+        </div>
+        <div class="work-role">
+          <span class="i18n-en">Media Assistant · Program Buddy</span>
+          <span class="i18n-zh">媒体助理 · 项目 Buddy</span>
+        </div>
       </div>
       <div class="work-desc">
-        Independently <strong>planned, shot, and edited</strong> short-form event coverage and interview-format promo pieces — built end-to-end as the sole media producer for both the 4-week Summer Session and the 3-week Winter Session. Featured contributors include international students from across the programme.
+        <span class="i18n-en">Independently <strong>planned, shot, and edited</strong> short-form event coverage and interview-format promo pieces — built end-to-end as the sole media producer for both the 4-week Summer Session and the 3-week Winter Session. Featured contributors include international students from across the programme.</span>
+        <span class="i18n-zh">作为唯一媒体制作者，独立完成 4 周暑校与 3 周寒校期间的短视频活动报道与访谈式宣传片，<strong>从策划、拍摄到剪辑全流程把控</strong>。受访者涵盖来自世界各地的国际生。</span>
       </div>
     </div>
 
     <div class="embeds-label">
-      <span>Editorial Features</span>
-      <span class="platform">Fudan University · WeChat</span>
+      <span><span class="i18n-en">Editorial Features</span><span class="i18n-zh">深度专栏</span></span>
+      <span class="platform"><span class="i18n-en">Fudan University · WeChat</span><span class="i18n-zh">复旦大学 · 微信公众号</span></span>
     </div>
     <div class="embed-grid reveal">
       <a class="fiss-poster" data-cert="fiss">
         <img src="assets/fiss-poster.jpg" alt="Fudan University International Summer Session 2025 — event poster" />
         <div class="fiss-overlay">
           <span class="label">FISS / FIWS · Program Buddy</span>
-          <span class="cta">View Certificates ↗</span>
+          <span class="cta"><span class="i18n-en">View Certificates ↗</span><span class="i18n-zh">查看证书 ↗</span></span>
         </div>
       </a>
 
@@ -2194,13 +2431,19 @@
         <div class="report-body">
           <div class="report-source">
             <img src="assets/fudan-logo.png" alt="" class="src-logo" />
-            <span>Fudan University · WeChat</span>
+            <span><span class="i18n-en">Fudan University · WeChat</span><span class="i18n-zh">复旦大学 · 公众号</span></span>
           </div>
-          <div class="report-title">Aliya Diagne: Connecting the World Through Soccer &amp; Learning</div>
-          <p>Long-form interview feature on a student-athlete bridging campus life and competitive football.</p>
+          <div class="report-title">
+            <span class="i18n-en">Aliya Diagne: Connecting the World Through Soccer &amp; Learning</span>
+            <span class="i18n-zh">Aliya Diagne：用足球与学习连接世界</span>
+          </div>
+          <p>
+            <span class="i18n-en">Long-form interview feature on a student-athlete bridging campus life and competitive football.</span>
+            <span class="i18n-zh">深度访谈一位在校园与职业足球之间穿行的学生运动员。</span>
+          </p>
           <div class="report-meta">
-            <span>Interview · Feature</span>
-            <span class="arrow">Read ↗</span>
+            <span><span class="i18n-en">Interview · Feature</span><span class="i18n-zh">专访 · 深度</span></span>
+            <span class="arrow"><span class="i18n-en">Read ↗</span><span class="i18n-zh">阅读 ↗</span></span>
           </div>
         </div>
       </a>
@@ -2212,20 +2455,26 @@
         <div class="report-body">
           <div class="report-source">
             <img src="assets/fudan-logo.png" alt="" class="src-logo" />
-            <span>Fudan University · WeChat</span>
+            <span><span class="i18n-en">Fudan University · WeChat</span><span class="i18n-zh">复旦大学 · 公众号</span></span>
           </div>
-          <div class="report-title">Learning Chinese, Teaching Thai: Tony's Exchange Year</div>
-          <p>Tony's year at Fudan, bridging campus and digital life — closing piece for the Summer Session 2025 cycle.</p>
+          <div class="report-title">
+            <span class="i18n-en">Learning Chinese, Teaching Thai: Tony's Exchange Year</span>
+            <span class="i18n-zh">学中文，教泰语：Tony 的复旦交换年</span>
+          </div>
+          <p>
+            <span class="i18n-en">Tony's year at Fudan, bridging campus and digital life — closing piece for the Summer Session 2025 cycle.</span>
+            <span class="i18n-zh">Tony 在复旦的这一年，在校园与数字生活之间穿行 —— 2025 年暑校系列的收官之作。</span>
+          </p>
           <div class="report-meta">
-            <span>Interview · Feature</span>
-            <span class="arrow">Read ↗</span>
+            <span><span class="i18n-en">Interview · Feature</span><span class="i18n-zh">专访 · 深度</span></span>
+            <span class="arrow"><span class="i18n-en">Read ↗</span><span class="i18n-zh">阅读 ↗</span></span>
           </div>
         </div>
       </a>
     </div>
 
     <div class="embeds-label" style="margin-top: 56px;">
-      <span>Video Productions</span>
+      <span><span class="i18n-en">Video Productions</span><span class="i18n-zh">视频作品</span></span>
       <span class="platform">YouTube</span>
     </div>
     <div class="embed-grid two-col reveal">
@@ -2234,7 +2483,8 @@
         <div class="yt-meta"><span class="dot"></span>YouTube · 01</div>
         <div class="yt-play"></div>
         <div class="yt-caption">
-          FISS / FIWS — short-form coverage produced for the programme.
+          <span class="i18n-en">FISS / FIWS — short-form coverage produced for the programme.</span>
+          <span class="i18n-zh">FISS / FIWS —— 为项目制作的短视频报道。</span>
           <span class="handle">youtube.com/watch?v=3Q17yNjH_gs</span>
         </div>
       </a>
@@ -2243,7 +2493,8 @@
         <div class="yt-meta"><span class="dot"></span>YouTube · 02</div>
         <div class="yt-play"></div>
         <div class="yt-caption">
-          FISS / FIWS — short-form coverage produced for the programme.
+          <span class="i18n-en">FISS / FIWS — short-form coverage produced for the programme.</span>
+          <span class="i18n-zh">FISS / FIWS —— 为项目制作的短视频报道。</span>
           <span class="handle">youtube.com/watch?v=qaQU-lOPh0Q</span>
         </div>
       </a>
@@ -2254,13 +2505,14 @@
   <article class="work-block reveal">
     <div class="ebao-card">
       <div class="work-meta-block">
-        <div class="work-date">Internship</div>
+        <div class="work-date"><span class="i18n-en">Internship</span><span class="i18n-zh">实习</span></div>
         <div class="work-org">eBaoTech 易保科技</div>
-        <div class="work-dept">Marketing Internship</div>
-        <div class="work-role">Marketing Intern</div>
+        <div class="work-dept"><span class="i18n-en">Marketing Internship</span><span class="i18n-zh">市场部实习</span></div>
+        <div class="work-role"><span class="i18n-en">Marketing Intern</span><span class="i18n-zh">市场实习生</span></div>
       </div>
       <div class="work-desc">
-        Built and QA-tested the <strong>product website and main corporate site</strong>; designed visual content for product communication; handled <strong>post-production</strong> for the company's official website video assets.
+        <span class="i18n-en">Built and QA-tested the <strong>product website and main corporate site</strong>; designed visual content for product communication; handled <strong>post-production</strong> for the company's official website video assets.</span>
+        <span class="i18n-zh">独立完成<strong>公司产品网站与主站</strong>的搭建与质量测试；为产品传播设计视觉物料；负责公司官网视频素材的<strong>后期制作</strong>。</span>
       </div>
     </div>
   </article>
@@ -2271,15 +2523,22 @@
   <div class="section-mark reveal">
     <span class="num">⑤</span>
     <span class="rule"></span>
-    <span class="label">Honors &amp; Awards</span>
+    <span class="label"><span class="i18n-en">Honors &amp; Awards</span><span class="i18n-zh">荣誉与奖项</span></span>
   </div>
   <div class="section-title">
     <h2 class="title-main reveal">
-      <span class="cn">荣誉</span>
-      <em>Honors</em> &amp; Awards
+      <span class="i18n-en">
+        <span class="cn">荣誉</span>
+        <em>Honors</em> &amp; Awards
+      </span>
+      <span class="i18n-zh">
+        <em>荣誉</em>与奖项
+        <span class="latin-sub">Honors &amp; Awards</span>
+      </span>
     </h2>
     <div class="title-aside reveal d1">
-      Selected distinctions, 2023 — 2025
+      <span class="i18n-en">Selected distinctions, 2023 — 2025</span>
+      <span class="i18n-zh">部分获奖记录 · 2023 — 2025</span>
     </div>
   </div>
 
@@ -2289,7 +2548,8 @@
       <div class="honor-text">
         <strong>Outstanding Graduate, Fudan University</strong>
         <span class="cn">复旦大学校级优秀毕业生</span>
-        <em>University Honour</em>
+        <span class="honor-en-cap">Outstanding Graduate, Fudan University</span>
+        <em><span class="i18n-en">University Honour</span><span class="i18n-zh">校级荣誉</span></em>
       </div>
     </div>
 
@@ -2298,7 +2558,8 @@
       <div class="honor-text">
         <strong>Fudan Undergraduate Excellence Scholarship · Second Prize</strong>
         <span class="cn">复旦大学本科生优秀学生奖学金 二等奖</span>
-        <em>Scholarship</em>
+        <span class="honor-en-cap">Fudan Undergraduate Excellence Scholarship · Second Prize</span>
+        <em><span class="i18n-en">Scholarship</span><span class="i18n-zh">奖学金</span></em>
       </div>
     </div>
 
@@ -2307,7 +2568,8 @@
       <div class="honor-text">
         <strong>"Global Challenges &amp; Youth Responsibility" Bilingual Speech Contest · First Prize</strong>
         <span class="cn">"全球挑战与青年责任" 复旦大学中外青年双语演讲比赛 一等奖</span>
-        <em>Public Speaking</em>
+        <span class="honor-en-cap">"Global Challenges &amp; Youth Responsibility" Bilingual Speech Contest · First Prize</span>
+        <em><span class="i18n-en">Public Speaking</span><span class="i18n-zh">演讲</span></em>
       </div>
       <span class="honor-arrow">↗</span>
     </a>
@@ -2317,7 +2579,8 @@
       <div class="honor-text">
         <strong>5th Classic English Speech Contest, Fudan · First Prize</strong>
         <span class="cn">复旦大学第五届经典英语演讲朗诵比赛 一等奖</span>
-        <em>Public Speaking</em>
+        <span class="honor-en-cap">5th Classic English Speech Contest, Fudan · First Prize</span>
+        <em><span class="i18n-en">Public Speaking</span><span class="i18n-zh">演讲</span></em>
       </div>
       <span class="honor-arrow">↗</span>
     </a>
@@ -2327,7 +2590,8 @@
       <div class="honor-text">
         <strong>8th "FLTRP·Etic Cup" Intercultural Competence Contest, Fudan · First Prize</strong>
         <span class="cn">第八届"外教社杯"全国跨文化能力大赛 复旦校选赛 一等奖</span>
-        <em>Intercultural</em>
+        <span class="honor-en-cap">8th "FLTRP·Etic Cup" Intercultural Competence Contest, Fudan · First Prize</span>
+        <em><span class="i18n-en">Intercultural</span><span class="i18n-zh">跨文化</span></em>
       </div>
       <span class="honor-arrow">↗</span>
     </a>
@@ -2337,7 +2601,8 @@
       <div class="honor-text">
         <strong>National Foreign Language Competition · English Short-Film Track · Silver (National)</strong>
         <span class="cn">"外研社·国才杯""理解当代中国"大学生外语能力大赛 英语短视频赛项 国赛银奖</span>
-        <em>Team Lead · Video</em>
+        <span class="honor-en-cap">National Foreign Language Competition · English Short-Film Track · Silver (National)</span>
+        <em><span class="i18n-en">Team Lead · Video</span><span class="i18n-zh">队长 · 视频</span></em>
       </div>
       <span class="honor-arrow">↗</span>
     </a>
@@ -2350,13 +2615,18 @@
     <div class="scroll-fill-frame" id="yunnanFrame">
       <img src="assets/yunnan-yuanjiang.jpg" alt="Yunnan Yuanjiang — jasmine fields under mountains" />
       <div class="scroll-fill-overlay">
-        <div class="meta">Field Notes · Yuanjiang, Yunnan · 2024</div>
+        <div class="meta">
+          <span class="i18n-en">Field Notes · Yuanjiang, Yunnan · 2024</span>
+          <span class="i18n-zh">田野笔记 · 云南 · 元江 · 2024</span>
+        </div>
         <div class="quote">
-          Where the work travelled — <em>jasmine fields under mountains, a classroom waiting on the other side.</em>
+          <span class="i18n-en">Where the work travelled — <em>jasmine fields under mountains, a classroom waiting on the other side.</em></span>
+          <span class="i18n-zh">工作走过的地方 ——<em> 山脚下的茉莉花田，山的另一头是等候开课的教室。</em></span>
         </div>
         <div class="footer-row">
           <div class="location">
-            Yuanjiang Hani-Yi-Dai Autonomous County
+            <span class="i18n-en">Yuanjiang Hani-Yi-Dai Autonomous County</span>
+            <span class="i18n-zh">元江哈尼族彝族傣族自治县</span>
             <span class="cn">云南 · 元江哈尼族彝族傣族自治县</span>
           </div>
           <div class="credit">Photo · YT · 2024</div>
@@ -2371,15 +2641,22 @@
   <div class="section-mark reveal">
     <span class="num">⑥</span>
     <span class="rule"></span>
-    <span class="label">Volunteer Service</span>
+    <span class="label"><span class="i18n-en">Volunteer Service</span><span class="i18n-zh">志愿服务</span></span>
   </div>
   <div class="section-title">
     <h2 class="title-main reveal">
-      <span class="cn">志愿</span>
-      <em>Volunteer</em> Service
+      <span class="i18n-en">
+        <span class="cn">志愿</span>
+        <em>Volunteer</em> Service
+      </span>
+      <span class="i18n-zh">
+        <em>志愿</em>服务
+        <span class="latin-sub">Volunteer Service</span>
+      </span>
     </h2>
     <div class="title-aside reveal d1">
-      Forums, teaching, and youth governance.
+      <span class="i18n-en">Forums, teaching, and youth governance.</span>
+      <span class="i18n-zh">论坛、支教与青年治理。</span>
     </div>
   </div>
 
@@ -2387,28 +2664,32 @@
     <a class="vol-item reveal" href="https://mp.weixin.qq.com/s/h6-TP7kzU84YTpePpZaV7w" target="_blank" rel="noopener">
       <div class="vol-date">2023.07</div>
       <div class="vol-text">
-        <strong>Asian Future Politicians Forum, Fudan SIRPA</strong> — Liaison group; supported event coordination and participant logistics.
+        <span class="i18n-en"><strong>Asian Future Politicians Forum, Fudan SIRPA</strong> — Liaison group; supported event coordination and participant logistics.</span>
+        <span class="i18n-zh"><strong>复旦大学国际关系与公共事务学院「亚洲未来政治家论坛」</strong> —— 联络组成员，负责活动协调与参会人员对接。</span>
       </div>
       <span class="vol-arrow">↗</span>
     </a>
     <a class="vol-item reveal" href="https://mp.weixin.qq.com/s/I_aBKrmbeJig1Ao73FrTmw" target="_blank" rel="noopener">
       <div class="vol-date">2024.07</div>
       <div class="vol-text">
-        <strong>"Cǎiyún Zhīnán" Teaching Volunteer Corps, Fudan</strong> — Served as homeroom teacher at Hongqiao Primary School, Yuanjiang Hani-Yi-Dai Autonomous County.
+        <span class="i18n-en"><strong>"Cǎiyún Zhīnán" Teaching Volunteer Corps, Fudan</strong> — Served as homeroom teacher at Hongqiao Primary School, Yuanjiang Hani-Yi-Dai Autonomous County.</span>
+        <span class="i18n-zh"><strong>复旦大学「彩云支南」研究生支教团</strong> —— 在云南元江哈尼族彝族傣族自治县红侨小学担任班主任。</span>
       </div>
       <span class="vol-arrow">↗</span>
     </a>
     <a class="vol-item reveal" href="https://mp.weixin.qq.com/s/wrFnbD3IPb8ouD9r7J0Zdg" target="_blank" rel="noopener">
       <div class="vol-date">2025.03 — 06</div>
       <div class="vol-text">
-        <strong>"黔山有伴" Companionship Project at Baijin Middle School, Huishui County</strong> — School of Economics summer programme; recognized as <em>Outstanding Volunteer</em> (25 hours).
+        <span class="i18n-en"><strong>"黔山有伴" Companionship Project at Baijin Middle School, Huishui County</strong> — School of Economics summer programme; recognized as <em>Outstanding Volunteer</em> (25 hours).</span>
+        <span class="i18n-zh"><strong>「黔山有伴」陪伴行动 · 惠水县摆金中学</strong> —— 复旦大学经济学院支教项目，获评<em>优秀志愿者</em>（25 小时）。</span>
       </div>
       <span class="vol-arrow">↗</span>
     </a>
     <a class="vol-item reveal" href="https://mp.weixin.qq.com/s/_MYLVLhNSSFfjdYnt_547w" target="_blank" rel="noopener">
       <div class="vol-date">2025.07</div>
       <div class="vol-text">
-        <strong>16th YICGG · Youth Innovation Competition on Global Governance</strong> — Core support team; opening / closing ceremony design and promotional video production.
+        <span class="i18n-en"><strong>16th YICGG · Youth Innovation Competition on Global Governance</strong> — Core support team; opening / closing ceremony design and promotional video production.</span>
+        <span class="i18n-zh"><strong>第十六届全球治理青年创新设计大赛 (YICGG)</strong> —— 核心保障组成员，负责开闭幕式设计与宣传视频制作。</span>
       </div>
       <span class="vol-arrow">↗</span>
     </a>
@@ -2419,11 +2700,11 @@
 <footer id="contact">
   <div class="footer-top">
     <div class="footer-tagline">
-      <em>Correspondence</em><br>
-      Welcome
+      <span class="i18n-en"><em>Correspondence</em><br>Welcome</span>
+      <span class="i18n-zh"><em>欢迎</em><br>联系</span>
     </div>
     <div class="footer-direct">
-      <h4>Direct</h4>
+      <h4><span class="i18n-en">Direct</span><span class="i18n-zh">直接联系</span></h4>
       <a href="mailto:eed25@foxmail.com">eed25@foxmail.com</a>
       <a href="mailto:22307090045@m.fudan.edu.cn">22307090045@m.fudan.edu.cn</a>
       <a href="tel:+8618321770718">+86 183-2177-0718</a>
@@ -2432,7 +2713,10 @@
 
   <div class="footer-bottom">
     <div>© 2026 · YELIDAER TUERDEMATI</div>
-    <div class="center">— set in Fraunces · DM Sans · Noto Serif SC —</div>
+    <div class="center">
+      <span class="i18n-en">— set in Fraunces · DM Sans · Noto Serif SC —</span>
+      <span class="i18n-zh">— 字体：Fraunces · DM Sans · Noto Serif SC —</span>
+    </div>
     <div>Shanghai · 上海</div>
   </div>
 </footer>
@@ -2445,9 +2729,9 @@
     </div>
     <img id="certImg" src="" alt="" />
     <div class="cert-nav">
-      <button class="cert-prev" id="certPrev">← Prev</button>
+      <button class="cert-prev" id="certPrev"><span class="i18n-en">← Prev</span><span class="i18n-zh">← 上一张</span></button>
       <span id="certCount"></span>
-      <button class="cert-next" id="certNext">Next →</button>
+      <button class="cert-next" id="certNext"><span class="i18n-en">Next →</span><span class="i18n-zh">下一张 →</span></button>
     </div>
   </div>
 </div>
@@ -2554,8 +2838,38 @@
       yunnanTicking = true;
     }
   }, { passive: true });
-  window.addEventListener('resize', updateYunnan);
-  updateYunnan();
+  // ============ LANGUAGE TOGGLE ============
+  function setLang(lang) {
+    if (lang !== 'zh') lang = 'en';
+    document.documentElement.setAttribute('lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+    // Persist as URL hash without scrolling
+    if (history.replaceState) {
+      const newHash = '#' + lang;
+      if (location.hash !== newHash) {
+        history.replaceState(null, '', newHash);
+      }
+    }
+    // Re-trigger scroll-fill recompute (image may need re-measure)
+    if (typeof updateYunnan === 'function') updateYunnan();
+  }
+  // Initial: read hash, fall back to English
+  const initialLang = location.hash === '#zh' ? 'zh' : 'en';
+  setLang(initialLang);
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.preventDefault();
+      setLang(b.dataset.lang);
+    });
+  });
+  // Allow back/forward to switch language
+  window.addEventListener('hashchange', () => {
+    if (location.hash === '#zh' || location.hash === '#en') {
+      setLang(location.hash.slice(1));
+    }
+  });
 </script>
 </body>
 </html>
